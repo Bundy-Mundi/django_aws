@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'v42sxh&oydf%kmh6sp30%=9@yq^w5gg)pjaeuiz6b4si5(*fu9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get("AWS_RDS_HOST")]
 
 
 # Application definition
@@ -79,12 +79,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+if DEBUG:
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': os.environ.get("AWS_RDS_HOST"),
+            'NAME': os.environ.get("AWS_RDS_NAME"),
+            'USER': os.environ.get("AWS_RDS_USER"),
+            'PASSWORD': os.environ.get("AWS_RDS_PASSWORD"),
+            'PORT': os.environ.get("AWS_RDS_PORT"),
+        }
+    }
 
 
 # Password validation
