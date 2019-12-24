@@ -12,13 +12,17 @@
 
 asgiref==3.2.3
 certifi==2019.11.28
+chardet==3.0.4
 django-dotenv==1.4.2
 django==3.0.1
+idna==2.8
 pbr==5.4.4
 pipenv-to-requirements==0.9.0
 pipenv==2018.11.26
 pytz==2019.3
+requests==2.22.0
 sqlparse==0.3.0
+urllib3==1.25.7
 virtualenv-clone==0.5.3
 virtualenv==16.7.9
 psycopg2==2.8.4
