@@ -1,4 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
   <p>This is Home! enjoy!</p>
+  <p>Enrolled Users : </p>
+  {% for user in users %}
+    <p>{{user}}</p>
+  {% endfor %}
 {% endblock %}
