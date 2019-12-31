@@ -27,6 +27,8 @@ DEBUG = bool(os.environ.get("DEBUG"))
 
 ALLOWED_HOSTS = [".elasticbeanstalk.com", "127.0.0.1"]
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Application definition
 
@@ -43,7 +45,9 @@ DJANGO_INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-INSTALLED_APPS = DJANGO_INSTALLED_APPS + USER_INSTALLED_APPS
+THIRD_PARTY_APPS = []
+
+INSTALLED_APPS = DJANGO_INSTALLED_APPS + USER_INSTALLED_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,13 +86,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 if DEBUG:
 
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
+    
+
+
 else:
+
+    DEFUALT_FILE_STORAGE = "config.custom_storages.DefaultStorage"
+    STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
+    AWS_LOCATION = "us-east-2"
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_USER_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = "aws.django.static.files"
+    AWS_AUTO_CREATE_BUCKET = True
+
+    AWS_S3_CUSTOM_DOMAIN = f"s3.{AWS_LOCATION}.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}"
+    STATIC_URL = f"{AWS_S3_CUSTOM_DOMAIN}/static/"
+    
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -139,5 +159,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
 AUTH_USER_MODEL = "users.User"
